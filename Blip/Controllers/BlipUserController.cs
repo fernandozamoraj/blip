@@ -36,6 +36,13 @@ namespace Blip.Controllers
 
         public ActionResult Feed()
         {
+            BlipUser user = GetUser();
+
+            if(user == null)
+            {
+                return RedirectToAction("Index");
+            }
+
             List<UserFeed> feed = FeedRepo.Current.GetAll();
             
             feed.Sort((x, y) => y.FeedId - x.FeedId);
@@ -44,7 +51,7 @@ namespace Blip.Controllers
             {
                 Feed = feed,
                 Message = "",
-                User = GetUser()
+                User = user
             };
 
             return View(model);

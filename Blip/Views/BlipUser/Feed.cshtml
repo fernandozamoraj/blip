@@ -40,6 +40,7 @@
 </style>
 
 <div id="updates">Updates</div>
+<div id="errordiv">...</div>
 
 <div class="row">
     <div class="col-lg-2">
@@ -104,11 +105,13 @@
             dataType: 'json',
             success: function (data) {
 
+                $('#errordiv').html("success " + data.FeedCount);
                 if (data.FeedCount > feedCount) {
 
                     //first time it's going to be zero
                     if (feedCount === 0) {
                         feedCount = data.FeedCount;
+                        $('#updates').hide();
                     }
                     else {
                         $('#updates').show();
@@ -118,7 +121,8 @@
                 }                
             },
             error: function (x, y, z) {
-                alert('x:' + x + ' y: ' + y + ' z:' + z);
+                //alert('x:' + x + ' y: ' + y + ' z:' + z);
+                $('#errordiv').html("error occurred" + x + " " + y + " " + z);
             }
         });
     }
