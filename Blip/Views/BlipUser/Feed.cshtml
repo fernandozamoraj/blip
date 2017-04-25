@@ -105,7 +105,7 @@
             dataType: 'json',
             success: function (data) {
 
-                $('#errordiv').html("success " + data.FeedCount);
+                //$('#errordiv').html("success " + data.FeedCount);
                 if (data.FeedCount > feedCount) {
 
                     //first time it's going to be zero
@@ -114,6 +114,7 @@
                         $('#updates').hide();
                     }
                     else {
+                        $('#updates').html('New Bleeps ' + (data.FeedCount - feedCount));
                         $('#updates').show();
 
                     }
