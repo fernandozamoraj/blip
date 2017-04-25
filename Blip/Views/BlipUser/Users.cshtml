@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Blip.Models.BlipUser>
+
+@{
+    ViewBag.Title = "Users";
+}
+
+<style>
+    img.avatar {
+        width: 50pt;
+        height: 75pt;
+    }
+
+    .handle {
+        color: cornflowerblue;
+        font-weight: normal;
+    }
+</style>
+
+<h2>Users</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Avatar)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserId)
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        @{ 
+            var avatarpath = "/Content/Images/" + @item.Avatar;
+        }
+        <td>
+            <img src="@avatarpath" class="avatar" />
+        </td>
+        <td>
+            
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserId)
+        </td>
+
+    </tr>
+}
+
+</table>

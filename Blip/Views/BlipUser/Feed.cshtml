@@ -1,0 +1,128 @@
+﻿@model Blip.Models.FeedViewModel
+
+@{
+    ViewBag.Title = "Feed";
+}
+
+
+<script src="~/Scripts/jquery-1.9.1.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script>
+
+    function OnSuccess() {
+        alert("succeeded");
+    }
+
+    function OnFailure() {
+        alert("oops it failed");
+    }
+
+    
+    var feedCount = 0;
+ 
+</script>
+<style>
+    img.avatar{
+        width: 50pt;
+        height:70pt; 
+    }
+
+    .handle{
+        color: cornflowerblue;
+        font-weight: normal;
+    }
+    #updates{
+        color: red;
+        
+    }
+
+
+</style>
+
+<div id="updates">Updates</div>
+
+<div class="row">
+    <div class="col-lg-2">
+        <img class="avatar" src="~/Content/Images/@Model.User.Avatar" />
+        <p class="handle">@Model.User.UserName</p>
+    </div>
+</div>
+
+
+    @using (Html.BeginForm())
+    {
+        <div class="row">
+            <div class="col-lg-6">
+                @Html.TextAreaFor(x => x.Message, 4, 40, null)
+            </div>
+            <div class="col-lg-3">
+                <input type="submit" value="Submit" class="btn btn-default" />
+            </div>
+        </div>
+   }
+
+
+<div class="feed">
+
+    @foreach (var item in Model.Feed)
+    {
+        <hr />
+        <div class="row">
+            @{
+                var imgPath = "/Content/Images/" + item.Avatar;
+                var userName = "@" + @item.UserName;
+            }
+            <div class="col-lg-1">
+                <img src="@imgPath" class="avatar"/>
+                <p class="handle">@userName</p>
+            </div>
+
+            <div class="col-lg-6">
+                <p class="lead">
+
+
+                    @Html.DisplayFor(modelItem => item.Comment)
+
+                </p>
+            </div>
+            <!--<p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> -->
+
+
+        </div>
+
+    }
+
+</div>
+
+<script>
+
+
+    function refreshPage() {
+        $.ajax({
+            url: "/blipapi/feedcount",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                if (data.FeedCount > feedCount) {
+
+                    //first time it's going to be zero
+                    if (feedCount === 0) {
+                        feedCount = data.FeedCount;
+                    }
+                    else {
+                        $('#updates').show();
+
+                    }
+
+                }                
+            },
+            error: function (x, y, z) {
+                alert('x:' + x + ' y: ' + y + ' z:' + z);
+            }
+        });
+    }
+
+    setInterval(refreshPage, 2000);
+</script>
+
