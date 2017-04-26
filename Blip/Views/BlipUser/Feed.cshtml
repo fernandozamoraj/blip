@@ -21,7 +21,7 @@
     var feedCount = 0;
  
 </script>
-<style>
+<style type="text/css">
     img.avatar{
         width: 50pt;
         height:70pt; 
@@ -35,7 +35,35 @@
         color: red;
         
     }
+        /* Some custom styles to beautify this example */
+    .main-content {
+        min-height: 70px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
 
+    .sidebar-content {
+        margin-bottom: 10px;
+        max-width: 150px;
+    }
+
+    .main-content-o {
+        min-height: 330px;
+        background: #dbdfe5;
+    }
+
+    .sidebar-content-o {
+        min-height: 150px;
+        margin-bottom: 30px;
+        background: #b4bac0;
+    }
+
+    .feed-item{
+        margin: 10px;
+        border: solid;
+        border-width: 1;
+        border-color: gainsboro;
+    }
 
 </style>
 
@@ -53,43 +81,53 @@
     @using (Html.BeginForm())
     {
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-sm-6">
                 @Html.TextAreaFor(x => x.Message, 4, 40, null)
             </div>
-            <div class="col-lg-3">
-                <input type="submit" value="Submit" class="btn btn-default" />
+
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="submit" value="Submit" class="btn btn-default form-control" />
             </div>
         </div>
-   }
+    }
 
 
-<div class="feed">
+<div class="feed container">
 
     @foreach (var item in Model.Feed)
     {
-        <hr />
-        <div class="row">
+
+        <div class="row feed-item">
             @{
                 var imgPath = "/Content/Images/" + item.Avatar;
                 var userName = "@" + @item.UserName;
             }
-            <div class="col-lg-1">
-                <img src="@imgPath" class="avatar"/>
-                <p class="handle">@userName</p>
+            <div class="col-sm-1">
+                <div class="main-content">
+                    <img src="@imgPath" class="avatar" />
+                </div>
             </div>
 
-            <div class="col-lg-6">
-                <p class="lead">
-
-
-                    @Html.DisplayFor(modelItem => item.Comment)
-
-                </p>
+            <div class="col-sm-3 col-sm-offset-1">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="sidebar-content handle">
+                            @userName  
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="sidebar-content">
+                            @Html.DisplayFor(modelItem => item.Comment)
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!--<p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p> -->
-
-
         </div>
+
 
     }
 
