@@ -1,4 +1,4 @@
-﻿@model Blip.Models.BlipUser
+﻿@model Blip.Models.BlipUserCreateViewModel
 
 @{
     ViewBag.Title = "Home Page";
@@ -10,30 +10,50 @@
     </div>
 </div>
 
-        <div class="jumbotron">
-            @using (Html.BeginForm("Create", "BlipUser"))
+<div class="jumbotron">
+    @using (Html.BeginForm("Create", "BlipUser"))
             {
 
-                <div class="row">
+        <div class="row">
+            <div class="col-md-5">
+                <p>
+                    Enter a user name and click submit
+                </p>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.User.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
+                    <label for="SelectedAvatar">Avatar List: </label>
+                    <select class="form-control" id="User_Avatar" name="User.Avatar">
+                        @foreach (var item in Model.Avatars)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="form-group">
                     <div class="col-md-5">
-                        <p>
-                            Enter a user name and click submit
-                        </p>
-
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-10">
-                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control" } })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-offset-2 col-md-10">
-                                <input type="submit" value="submit" class="btn btn-default" />
-                            </div>
-                        </div>
-
+                        <input type="submit" value="submit" class="btn btn-default" />
                     </div>
                 </div>
-            }
+
+            </div>
         </div>
+
+    }
+</div>

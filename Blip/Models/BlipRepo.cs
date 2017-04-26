@@ -33,6 +33,11 @@ namespace Blip.Models
             _r = new Random();
         }
 
+        public List<string> GetAvatars()
+        {
+            return _avatars;
+        }
+
         public static BlipRepo Current {
             get {
                 if(_repo == null)
@@ -48,8 +53,8 @@ namespace Blip.Models
             user.UserId = _users.Count();
 
             //Set avatar
-            _nextAvatar = _r.Next() % _avatars.Count();
-            user.Avatar = _avatars[_nextAvatar];
+            //_nextAvatar = _r.Next() % _avatars.Count();
+            //user.Avatar = _avatars[_nextAvatar];
 
             _users.Add(user);
 

@@ -216,6 +216,7 @@
     <Compile Include="Models\BlipRepo.cs" />
     <Compile Include="Models\BlipUser.cs" />
     <Compile Include="Controllers\BlipUserController.cs" />
+    <Compile Include="Models\BlipUserCreateViewModel.cs" />
     <Compile Include="Models\FeedRepo.cs" />
     <Compile Include="Models\FeedViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -247,6 +248,7 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

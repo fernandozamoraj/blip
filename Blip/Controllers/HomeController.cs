@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Blip.Models;
 
 namespace Blip.Controllers
 {
@@ -10,7 +11,14 @@ namespace Blip.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            BlipUserCreateViewModel model = new BlipUserCreateViewModel
+            {
+                Avatars = BlipRepo.Current.GetAvatars(),
+                SelectedAvatar = "",
+                User = new BlipUser()
+            };
+
+            return View(model);
         }
 
         public ActionResult About()

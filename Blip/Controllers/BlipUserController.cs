@@ -12,13 +12,21 @@ namespace Blip.Controllers
         // GET: BlipUser
         public ActionResult Index()
         {
-            return View();
+            BlipUserCreateViewModel model = new BlipUserCreateViewModel
+            {
+                Avatars = BlipRepo.Current.GetAvatars(),
+                SelectedAvatar = "",
+                User = new BlipUser()
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public ActionResult Create(BlipUser model)
+        public ActionResult Create(BlipUserCreateViewModel model)
         {
-           BlipUser user = BlipRepo.Current.AddUser(model);
+
+           BlipUser user = BlipRepo.Current.AddUser(model.User);
 
             this.HttpContext.Session.Add("CurrentUser", user);
 
