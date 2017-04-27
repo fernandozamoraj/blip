@@ -32,5 +32,50 @@ namespace Blip.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, new { FeedCount = feedCount });
         }
+
+        [Route("createwinner")]
+        [HttpGet]
+        public HttpResponseMessage CreateWinner()
+        {
+            BlipRepo.Current.CreateWinner();
+
+            return Request.CreateResponse(HttpStatusCode.OK, new { Winner = BlipRepo.Current.GetWinner() });
+        }
+
+        [Route("getwinner")]
+        [HttpGet]
+        public HttpResponseMessage GetWinner()
+        {
+            BlipUser user = BlipRepo.Current.GetWinner();
+
+            
+            return Request.CreateResponse(HttpStatusCode.OK, new { Winner = user });
+        }
+
+
+        [Route("resetwinner")]
+        [HttpGet]
+        public HttpResponseMessage ResetWinner()
+        {
+            BlipRepo.Current.SetWinnerClaimed();
+            
+            return Request.CreateResponse(HttpStatusCode.OK, new { Message = "Success" });
+        }
+
+
+        [Route("admin")]
+        [HttpGet]
+        public HttpResponseMessage Admin()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, new { Message = "blipapi/createwinner, blipapi/getwinner, blipapi/resetwinner, blipapi/resetdb" });
+        }
+
+        [Route("resetdb")]
+        [HttpGet]
+        public HttpResponseMessage ResetDb()
+        {
+            //TODO: reset db
+            return Request.CreateResponse(HttpStatusCode.OK, new { Message = "db has been reset" });
+        }
     }
 }

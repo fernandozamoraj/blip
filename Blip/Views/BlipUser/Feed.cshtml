@@ -61,16 +61,39 @@
     .feed-item{
         margin: 10px;
         border: solid;
-        border-width: 1;
+        border-width: 1px;
         border-color: gainsboro;
+    }
+
+    #refresh-icon{
+        width: 32px;
+        height: 32px;
+    }
+
+    #new-bleeps{
+        background-image: url(/Content/Images/refresh-small.PNG);
+        background-repeat: no-repeat;
+        background-position: center;
+        width: 40px;
+        height: 40px;
+        font-size: large;
+        font-weight: bold;
+        display: none;
+    }
+
+    #winner{
+        font-size: xx-large;
+        color: red;
     }
 
 </style>
 
-<div >
-    @Html.ActionLink("New Bleeps", "Feed", "BlipUser", new { @class = "", @id="updates" })
-    <!--a href="." id="updates">Updates</!--a></div-->
+<div id="new-bleeps">
+    <a class="" href="/BlipUser/Feed?Length=8" id="updates"></a>
+</div>
+
 <div id="errordiv">...</div>
+<div id="winner"></div>
 
 <div class="row">
     <div class="col-lg-2">
@@ -137,6 +160,37 @@
 
 <script>
 
+    function checkForWinner() {
+        $.ajax({
+            url: "/blipapi/getwinner",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                
+                //$('#errordiv').html("success " + data.FeedCount);
+                if (data.Winner != null) {
+                    $('#winner').show();
+
+                    //first time it's going to be zero
+                    if (data.Winner.UserId == '@Model.User.UserId'){
+                        $('#winner').html('Congratulations! You Won!!!');
+                    }
+                    else {
+                        $('#winner').html('Sorry! Better luck next time!');
+                    }
+                }
+                else {
+                    $('#winner').hide();
+                }
+
+            },
+            error: function (x, y, z) {
+                //alert('x:' + x + ' y: ' + y + ' z:' + z);
+                $('#errordiv').html("error occurred" + x + " " + y + " " + z);
+            }
+        });
+    }
 
     function refreshPage() {
         $.ajax({
@@ -151,11 +205,11 @@
                     //first time it's going to be zero
                     if (feedCount === 0) {
                         feedCount = data.FeedCount;
-                        $('#updates').hide();
+                        $('#new-bleeps').hide();
                     }
                     else {
-                        $('#updates').html('New Bleeps ' + (data.FeedCount - feedCount));
-                        $('#updates').show();
+                        $('#updates').html('' + (data.FeedCount - feedCount) + "...");
+                        $('#new-bleeps').show();
 
                     }
 
@@ -169,5 +223,6 @@
     }
 
     setInterval(refreshPage, 2000);
+    setInterval(checkForWinner, 2000);
 </script>
 

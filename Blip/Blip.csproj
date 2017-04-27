@@ -240,6 +240,8 @@
     <Content Include="Content\Images\av10.PNG" />
     <Content Include="Content\Images\av0.PNG" />
     <Content Include="Content\Images\blip-banner.PNG" />
+    <Content Include="Content\Images\fire-small.PNG" />
+    <Content Include="Content\Images\refresh-small.PNG" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
