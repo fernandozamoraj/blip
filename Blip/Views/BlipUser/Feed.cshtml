@@ -174,10 +174,10 @@
 
                     //first time it's going to be zero
                     if (data.Winner.UserId == '@Model.User.UserId'){
-                        $('#winner').html('Congratulations! You Won!!!');
+                        $('#winner').html('Congratulations @Model.User.DisplayName! You Won!!!');
                     }
                     else {
-                        $('#winner').html('Sorry! Better luck next time!');
+                        $('#winner').html('Sorry! '+data.Winner.DisplayName+' is the winner. Better luck next time!');
                     }
                 }
                 else {
