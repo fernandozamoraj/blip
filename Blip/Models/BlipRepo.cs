@@ -17,6 +17,12 @@ namespace Blip.Models
         Random _r;
         private BlipRepo()
         {
+            Clear();
+            _r = new Random(Guid.NewGuid().GetHashCode());
+        }
+
+        public void Clear()
+        {
             _users = new List<BlipUser>();
             _avatars = new List<string>();
             _winners = new List<int>();
@@ -32,7 +38,12 @@ namespace Blip.Models
             _avatars.Add("av8.PNG");
             _avatars.Add("av9.PNG");
             _avatars.Add("av10.PNG");
-            _r = new Random();
+            _avatars.Add("av11.PNG");
+            _avatars.Add("av12.PNG");
+            _avatars.Add("av13.PNG");
+            _avatars.Add("av14.PNG");
+            _avatars.Add("av15.PNG");
+
         }
 
         public List<string> GetAvatars()
@@ -69,6 +80,13 @@ namespace Blip.Models
 
             if (_users.Count < 1)
                 return;
+
+            //If everyone has won reset the winners list
+            if(_users.Count <= _winners.Count)
+            {
+                _winners.Clear();
+                _claims = 0;
+            }
 
             do
             {

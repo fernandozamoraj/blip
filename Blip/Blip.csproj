@@ -229,6 +229,11 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\av1.PNG" />
+    <Content Include="Content\Images\av11.PNG" />
+    <Content Include="Content\Images\av12.PNG" />
+    <Content Include="Content\Images\av13.PNG" />
+    <Content Include="Content\Images\av14.PNG" />
+    <Content Include="Content\Images\av15.PNG" />
     <Content Include="Content\Images\av2.PNG" />
     <Content Include="Content\Images\av3.PNG" />
     <Content Include="Content\Images\av4.PNG" />

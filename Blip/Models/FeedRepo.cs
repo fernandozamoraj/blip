@@ -13,7 +13,7 @@ namespace Blip.Models
 
         private FeedRepo()
         {
-            AddDefaultFeeds();
+            Clear();
         }
 
         private void AddDefaultFeeds()
@@ -55,6 +55,13 @@ namespace Blip.Models
         }
 
         public static FeedRepo Current{get{ return _repo; } }
+
+        public void Clear()
+        {
+            feeds.Clear();
+            feeds = new List<UserFeed>();
+            AddDefaultFeeds();
+        }
 
         public void Add(UserFeed feed)
         {

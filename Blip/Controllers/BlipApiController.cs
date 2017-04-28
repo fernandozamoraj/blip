@@ -74,7 +74,9 @@ namespace Blip.Controllers
         [HttpGet]
         public HttpResponseMessage ResetDb()
         {
-            //TODO: reset db
+            BlipRepo.Current.Clear();
+            FeedRepo.Current.Clear();
+
             return Request.CreateResponse(HttpStatusCode.OK, new { Message = "db has been reset" });
         }
     }
