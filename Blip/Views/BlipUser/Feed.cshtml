@@ -119,8 +119,7 @@
             success: function (data) {
                 model.Feed.removeAll();
                 for (var i = 0; i < data.Feed.length; i++) {
-                    data.Feed[i].imagePath = ko.observable("");
-                    data.Feed[i].imagePath("/Content/Images/" + data.Feed[i].Avatar);
+                    data.Feed[i].imagePath = ko.observable("/Content/Images/" + data.Feed[i].Avatar);
                     model.Feed.push(data.Feed[i]);
                 }
 
