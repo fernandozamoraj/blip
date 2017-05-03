@@ -112,7 +112,7 @@ namespace Blip.Controllers
                 //TODO fix this
                 user = new BlipUser
                 {
-                    Avatar = "av1",
+                    Avatar = "av1.PNG",
                     UserId = 0,
                     UserName = "TODO"
                 };

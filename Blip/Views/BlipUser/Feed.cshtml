@@ -92,6 +92,7 @@
             userName: ko.observable(""),
             userId: ko.observable(),
             displayName: ko.observable(),
+            imagePath: ko.observable()
         }
     };
 
@@ -100,6 +101,7 @@
             type: "POST",
             success: function (data) {
                 model.editor.comment("");
+                data.imagePath = ko.observable("/Content/Images/" + data.Avatar);
                 //TODO what todo
                 model.Feed.unshift(data);
             },
@@ -117,6 +119,8 @@
             success: function (data) {
                 model.Feed.removeAll();
                 for (var i = 0; i < data.Feed.length; i++) {
+                    data.Feed[i].imagePath = ko.observable("");
+                    data.Feed[i].imagePath("/Content/Images/" + data.Feed[i].Avatar);
                     model.Feed.push(data.Feed[i]);
                 }
 
@@ -125,15 +129,12 @@
                 model.editor.userId(data.User.UserId);
                 model.editor.displayName(data.User.DisplayName);
                 model.editor.comment("");
+                model.editor.imagePath("/Content/Images/" + data.User.Avatar);
 
                 feedCount = model.Feed.length;
             }
         });
     }
-
-    
-
-
 
     $(document).ready(function () {
         getAllFeeds();
@@ -242,12 +243,10 @@
 
         <div class="row">
             <div class="col-lg-2">
-                <img class="avatar" src="~/Content/Images/av1.PNG" /> <!--TODO fix this to display avatar-->
+                <img class="avatar" data-bind="attr:{src: model.editor.imagePath}" /> 
                 <p class="handle" data-bind="text: model.editor.displayName"></p>
             </div>
         </div>
-
-
 
         <div class="row">
             <div class="col-sm-6">
@@ -266,7 +265,7 @@
 
                 <div class="col-sm-1">
                     <div class="main-content">
-                        <img src="~/Content/Images/av1.PNG" class="avatar" /> <!--TODO: fix this to use user avatar-->
+                        <img data-bind="attr:{src: imagePath}"  class="avatar" /> 
                     </div>
                 </div>
 
