@@ -1,90 +1,92 @@
 ﻿@model Blip.Models.BlipUserCreateViewModel
 
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Home Page";
 }
 
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+@section Styles{
+    <style>
+        img.avatar {
+            width: 55pt;
+            height: 70pt;
+        }
+    </style>
+}
 
-<style>
-    img.avatar {
-        width: 55pt;
-        height: 70pt;
-    }
-</style>
+@section Scripts{
 
+    <script>
+        $('select[id=User_Avatar]').change(function () {
 
-<div class="row">
-    <div class="col-md-4">
-        <img src="~/Content/Images/blip-banner.PNG" />
+            var val = $(this).val();
+
+            console.log(val);
+
+            $('#avatar_s').attr('src', '/Content/Images/'+ val).css('display', val.length ? 'block' : 'none');
+        });
+
+    </script>
+}
+
+@section Body{
+
+    <div class="row">
+        <div class="col-md-4">
+            <img src="~/Content/Images/blip-banner.PNG" />
+        </div>
     </div>
-</div>
 
-<div class="jumbotron">
-    @using (Html.BeginForm("Create", "BlipUser"))
-            {
+    <div class="jumbotron">
+        @using (Html.BeginForm("Create", "BlipUser"))
+        {
 
-        <div class="row">
-            <div class="col-md-5">
-                <div class="form-group">
-                    <img id="avatar_s" src="~/Content/Images/av0.PNG" class="avatar" />
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <img id="avatar_s" src="~/Content/Images/av1.PNG" class="avatar" />
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-5">
-                <p>
-                    Enter a user name <br />Select and Avatar <br/> and click submit
-                </p>
+            <div class="row">
+                <div class="col-md-5">
+                    <p>
+                        Enter a user name <br />Select and Avatar <br /> and click submit
+                    </p>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.User.UserName, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control" } })
-                </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.User.UserName, htmlAttributes: new { @class = "control-label" })
+                        @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
 
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-5">
-                <div class="form-group">
-                    <label for="SelectedAvatar">Avatar List: </label>
-                    <select class="form-control" id="User_Avatar" name="User.Avatar">
-                        @foreach (var item in Model.Avatars)
-                        {
-                            <option value="@item">@item</option>
-                        }
-                    </select>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-5">
-                <div class="form-group">
-                    <input type="submit" value="submit" class="btn btn-default form-control" />
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="SelectedAvatar">Avatar List: </label>
+                        <select class="form-control" id="User_Avatar" name="User.Avatar">
+                            @foreach (var item in Model.Avatars)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-5">
-                <div class="form-group">
-                    <button type="button" value="select" class="btn btn-default form-control" id="btn-select-avatar"/>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <input type="submit" value="submit" class="btn btn-default form-control" />
+                    </div>
                 </div>
             </div>
-        </div>
 
 
-    }
-</div>
+        }
+    </div>
 
-<script>
-    $('select[id=User_Avatar]').change(function () {
+}
 
-        var val = $(this).val();
 
-        console.log(val);
-
-        $('#avatar_s').attr('src', '/Content/Images/'+ val).css('display', val.length ? 'block' : 'none');
-    });
-</script>

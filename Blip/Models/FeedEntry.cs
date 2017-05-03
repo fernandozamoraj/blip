@@ -5,10 +5,10 @@ using System.Web;
 
 namespace Blip.Models
 {
-    public class FeedViewModel
+    public class FeedEntry
     {
-        public List<UserFeed> Feed { get; set; }
-        public BlipUser User { get; set; }
+        public string Avatar { get; set; }
+        public string UserName { get; set; }
         public string Comment { get; set; }
     }
 }

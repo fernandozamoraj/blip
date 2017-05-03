@@ -1,164 +1,152 @@
-﻿@model Blip.Models.FeedViewModel
+﻿@using Blip.Models
 
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Feed";
 }
 
+@section Styles{
+ 
+    <style type="text/css">
+        img.avatar {
+            width: 50pt;
+            height: 70pt;
+        }
 
-<script src="~/Scripts/jquery-1.9.1.js"></script>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+        .handle {
+            color: cornflowerblue;
+            font-weight: normal;
+        }
+
+        #updates {
+            color: red;
+        }
+        /* Some custom styles to beautify this example */
+        .main-content {
+            min-height: 70px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .sidebar-content {
+            margin-bottom: 10px;
+            max-width: 150px;
+        }
+
+        .main-content-o {
+            min-height: 330px;
+            background: #dbdfe5;
+        }
+
+        .sidebar-content-o {
+            min-height: 150px;
+            margin-bottom: 30px;
+            background: #b4bac0;
+        }
+
+        .feed-item {
+            margin: 10px;
+            border: solid;
+            border-width: 1px;
+            border-color: gainsboro;
+        }
+
+        #refresh-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        #new-bleeps {
+            background-image: url(/Content/Images/refresh-small.PNG);
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 40px;
+            height: 40px;
+            font-size: large;
+            font-weight: bold;
+            display: none;
+            cursor: pointer;
+        }
+
+        #winner {
+            font-size: xx-large;
+            color: red;
+        }
+    </style>
+
+   
+}
+
+
+@section Scripts{
+ 
 <script>
 
-    function OnSuccess() {
-        alert("succeeded");
+    var feedCount = 0;
+
+    var model = {
+        Feed: ko.observableArray(),
+        editor: {
+            comment: ko.observable(""),
+            avatar: ko.observable(""),
+            userName: ko.observable(""),
+            userId: ko.observable(),
+            displayName: ko.observable(),
+        }
+    };
+
+    function addMessage() {
+        $.ajax("/blipapi/addfeed", {
+            type: "POST",
+            success: function (data) {
+                model.editor.comment("");
+                //TODO what todo
+                model.Feed.unshift(data);
+            },
+            data: {
+                Avatar: model.editor.avatar(),
+                UserName: model.editor.userName(),
+                Comment: model.editor.comment()
+            }
+        });
     }
 
-    function OnFailure() {
-        alert("oops it failed");
+    function getAllFeeds() {
+        $.ajax("/blipapi/getall", {
+            type: "GET",
+            success: function (data) {
+                model.Feed.removeAll();
+                for (var i = 0; i < data.Feed.length; i++) {
+                    model.Feed.push(data.Feed[i]);
+                }
+
+                model.editor.avatar(data.User.Avatar);
+                model.editor.userName(data.User.UserName);
+                model.editor.userId(data.User.UserId);
+                model.editor.displayName(data.User.DisplayName);
+                model.editor.comment("");
+
+                feedCount = model.Feed.length;
+            }
+        });
     }
 
     
-    var feedCount = 0;
- 
-</script>
-<style type="text/css">
-    img.avatar{
-        width: 50pt;
-        height:70pt; 
-    }
-
-    .handle{
-        color: cornflowerblue;
-        font-weight: normal;
-    }
-    #updates{
-        color: red;
-        
-    }
-        /* Some custom styles to beautify this example */
-    .main-content {
-        min-height: 70px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-    }
-
-    .sidebar-content {
-        margin-bottom: 10px;
-        max-width: 150px;
-    }
-
-    .main-content-o {
-        min-height: 330px;
-        background: #dbdfe5;
-    }
-
-    .sidebar-content-o {
-        min-height: 150px;
-        margin-bottom: 30px;
-        background: #b4bac0;
-    }
-
-    .feed-item{
-        margin: 10px;
-        border: solid;
-        border-width: 1px;
-        border-color: gainsboro;
-    }
-
-    #refresh-icon{
-        width: 32px;
-        height: 32px;
-    }
-
-    #new-bleeps{
-        background-image: url(/Content/Images/refresh-small.PNG);
-        background-repeat: no-repeat;
-        background-position: center;
-        width: 40px;
-        height: 40px;
-        font-size: large;
-        font-weight: bold;
-        display: none;
-    }
-
-    #winner{
-        font-size: xx-large;
-        color: red;
-    }
-
-</style>
-
-<div id="new-bleeps">
-    <a class="" href="/BlipUser/Feed?Length=8" id="updates"></a>
-</div>
-
-<div id="errordiv">...</div>
-<div id="winner"></div>
-
-<div class="row">
-    <div class="col-lg-2">
-        <img class="avatar" src="~/Content/Images/@Model.User.Avatar" />
-        <p class="handle">@Model.User.UserName</p>
-    </div>
-</div>
 
 
-    @using (Html.BeginForm())
-    {
-        <div class="row">
-            <div class="col-sm-6">
-                @Html.TextAreaFor(x => x.Message, 4, 40, null)
-            </div>
 
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <input type="submit" value="Submit" class="btn btn-default form-control" />
-            </div>
-        </div>
-    }
+    $(document).ready(function () {
+        getAllFeeds();
+        ko.applyBindings(model);
 
+        setInterval(refreshPage, 2000);
+        setInterval(checkForWinner, 2000);
 
-<div class="feed container">
-
-    @foreach (var item in Model.Feed)
-    {
-
-        <div class="row feed-item">
-            @{
-                var imgPath = "/Content/Images/" + item.Avatar;
-                var userName = "@" + @item.UserName;
-            }
-            <div class="col-sm-1">
-                <div class="main-content">
-                    <img src="@imgPath" class="avatar" />
-                </div>
-            </div>
-
-            <div class="col-sm-3 col-sm-offset-1">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="sidebar-content handle">
-                            @userName  
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="sidebar-content">
-                            @Html.DisplayFor(modelItem => item.Comment)
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    }
-
-</div>
-
-<script>
+        $("#new-bleeps").click(function () {
+            console.log("updates was clicked");
+            getAllFeeds();
+        });
+    });
 
     function checkForWinner() {
         $.ajax({
@@ -167,17 +155,17 @@
             dataType: 'json',
             success: function (data) {
 
-                
+
                 //$('#errordiv').html("success " + data.FeedCount);
                 if (data.Winner != null) {
                     $('#winner').show();
 
                     //first time it's going to be zero
-                    if (data.Winner.UserId == '@Model.User.UserId'){
-                        $('#winner').html('Congratulations @Model.User.DisplayName! You Won!!!');
+                    if (data.Winner.UserId == model.editor.userId()) {
+                        $('#winner').html('Congratulations ' + data.Winner.DisplayName + '! You Won!!!');
                     }
                     else {
-                        $('#winner').html('Sorry! '+data.Winner.DisplayName+' is the winner. Better luck next time!');
+                        $('#winner').html('Sorry! ' + data.Winner.DisplayName + ' is the winner. Better luck next time!');
                     }
                 }
                 else {
@@ -199,7 +187,16 @@
             dataType: 'json',
             success: function (data) {
 
+                console.log("data.FeedCount is " + data.FeedCount);
+                console.log("feedCount is " + feedCount);
                 //$('#errordiv').html("success " + data.FeedCount);
+
+                if(feedCount==data.FeedCount ){
+
+                    $('#updates').html('');
+                    $('#new-bleeps').hide();
+                }
+
                 if (data.FeedCount > feedCount) {
 
                     //first time it's going to be zero
@@ -212,8 +209,8 @@
                         $('#new-bleeps').show();
 
                     }
-
-                }                
+                }
+                
             },
             error: function (x, y, z) {
                 //alert('x:' + x + ' y: ' + y + ' z:' + z);
@@ -222,7 +219,73 @@
         });
     }
 
-    setInterval(refreshPage, 2000);
-    setInterval(checkForWinner, 2000);
-</script>
 
+</script>   
+}
+
+@section Body{
+
+
+
+    <div class="feed container">
+
+
+
+        <div id="new-bleeps" class="btn-sm">
+            <div class="col-sm-6" id="updates-div">
+                <a class=""  id="updates"></a>
+            </div>
+        </div>
+
+        <div id="errordiv">...</div>
+        <div id="winner"></div>
+
+        <div class="row">
+            <div class="col-lg-2">
+                <img class="avatar" src="~/Content/Images/av1.PNG" /> <!--TODO fix this to display avatar-->
+                <p class="handle" data-bind="text: model.editor.displayName"></p>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-sm-6">
+                <textarea cols="40" rows="4" data-bind="value: model.editor.comment"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="submit" value="Submit" class="btn btn-default form-control" data-bind="click: addMessage" />
+            </div>
+        </div>
+
+
+        <div data-bind="foreach: model.Feed">
+            <div class="row feed-item">
+
+                <div class="col-sm-1">
+                    <div class="main-content">
+                        <img src="~/Content/Images/av1.PNG" class="avatar" /> <!--TODO: fix this to use user avatar-->
+                    </div>
+                </div>
+
+                <div class="col-sm-3 col-sm-offset-1">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="sidebar-content handle" data-bind="text: UserName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="sidebar-content" data-bind="text: Comment">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>    
+}

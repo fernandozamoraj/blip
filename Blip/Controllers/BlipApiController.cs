@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
+
 namespace Blip.Controllers
 {
     [RoutePrefix("blipapi")]
@@ -78,6 +79,66 @@ namespace Blip.Controllers
             FeedRepo.Current.Clear();
 
             return Request.CreateResponse(HttpStatusCode.OK, new { Message = "db has been reset" });
+        }
+
+
+        [Route("addfeed")]
+        [HttpPost]
+        public HttpResponseMessage AddFeed(FeedEntry model)
+        {
+
+            UserFeed feed = new UserFeed
+            {
+                Avatar = model.Avatar,
+                UserName = model.UserName,
+                Comment = model.Comment
+            };
+
+            FeedRepo.Current.Add(feed);
+
+            return Request.CreateResponse(HttpStatusCode.OK, feed);
+        }
+
+        private BlipUser GetUser()
+        {
+            BlipUser user = null;
+
+            try
+            {
+                user = System.Web.HttpContext.Current.Session["CurrentUser"] as BlipUser;
+            }
+            catch (Exception e)
+            {
+                //TODO fix this
+                user = new BlipUser
+                {
+                    Avatar = "av1",
+                    UserId = 0,
+                    UserName = "TODO"
+                };
+            }
+
+            return user;
+        }
+
+        [Route("getall")]
+        public HttpResponseMessage GetAll()
+        {
+
+            BlipUser user = GetUser();
+
+            List<UserFeed> feed = FeedRepo.Current.GetAll();
+
+            feed.Sort((x, y) => y.FeedId - x.FeedId);
+
+            FeedViewModel model = new FeedViewModel
+            {
+                Feed = feed,
+                Comment = "",
+                User = user
+            };
+
+            return Request.CreateResponse(HttpStatusCode.OK, model);
         }
     }
 }
