@@ -1,7 +1,5 @@
 TODO List
 
-1. Fix bug to reset winner - infinite loop when all have won
-2. Implement resetdb
-3. download more avatars
-4. Display user names on winner notification
-5. Implement likes capability
+1. Implement likes capability
+2. Implement Login validation
+3. Better avatar selection
