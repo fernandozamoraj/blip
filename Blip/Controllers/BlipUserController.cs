@@ -30,6 +30,8 @@ namespace Blip.Controllers
 
             this.HttpContext.Session.Add("CurrentUser", user);
 
+            System.Console.WriteLine("MVC Controller Session ID: {0}", this.HttpContext.Session.SessionID);
+
             return RedirectToAction("Feed");
         }
 

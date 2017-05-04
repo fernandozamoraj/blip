@@ -221,6 +221,7 @@
     <Compile Include="Models\FeedRepo.cs" />
     <Compile Include="Models\FeedViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\UserFeed.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -230,11 +231,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\av1.PNG" />
-    <Content Include="Content\Images\av11.PNG" />
-    <Content Include="Content\Images\av12.PNG" />
-    <Content Include="Content\Images\av13.PNG" />
-    <Content Include="Content\Images\av14.PNG" />
-    <Content Include="Content\Images\av15.PNG" />
     <Content Include="Content\Images\av2.PNG" />
     <Content Include="Content\Images\av3.PNG" />
     <Content Include="Content\Images\av4.PNG" />
@@ -266,7 +262,6 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\ko.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />

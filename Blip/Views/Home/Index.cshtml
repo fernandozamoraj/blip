@@ -17,14 +17,17 @@
 @section Scripts{
 
     <script>
-        $('select[id=User_Avatar]').change(function () {
 
-            var val = $(this).val();
+        $(document).ready(function () {
+            $('select[id=User_Avatar]').change(function () {
 
-            console.log(val);
+                var val = $(this).val();
 
-            $('#avatar_s').attr('src', '/Content/Images/'+ val).css('display', val.length ? 'block' : 'none');
-        });
+                console.log(val);
+
+                $('#avatar_s').attr('src', '/Content/Images/' + val).css('display', val.length ? 'block' : 'none');
+            });
+        });        
 
     </script>
 }

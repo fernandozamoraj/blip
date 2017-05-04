@@ -19,14 +19,16 @@
 @section Scripts{
 
     <script>
-        $('select[id=User_Avatar]').change(function () {
+        $(document).ready(function () {
+            $('select[id=User_Avatar]').change(function () {
 
-            var val = $(this).val();
+                var val = $(this).val();
 
-            console.log(val);
+                console.log(val);
 
-            $('#avatar_s').attr('src', '/Content/Images/'+ val).css('display', val.length ? 'block' : 'none');
-        });
+                $('#avatar_s').attr('src', '/Content/Images/' + val).css('display', val.length ? 'block' : 'none');
+            });
+        });        
 
     </script>
 }

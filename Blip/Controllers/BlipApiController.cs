@@ -105,6 +105,7 @@ namespace Blip.Controllers
 
             try
             {
+                System.Console.WriteLine("Api Session ID: {0}", System.Web.HttpContext.Current.Session.SessionID);
                 user = System.Web.HttpContext.Current.Session["CurrentUser"] as BlipUser;
             }
             catch (Exception e)
@@ -119,6 +120,22 @@ namespace Blip.Controllers
             }
 
             return user;
+        }
+
+        [Route("login")]
+        [HttpPost]
+        public HttpResponseMessage Create(LoginModel model)
+        {
+
+            BlipUser user = new BlipUser
+            {
+                Avatar = model.Avatar,
+                UserName = model.UserName,
+            };
+
+            user = BlipRepo.Current.AddUser(user);
+
+            return Request.CreateResponse(HttpStatusCode.OK, user);
         }
 
         [Route("getall")]
@@ -139,6 +156,12 @@ namespace Blip.Controllers
             };
 
             return Request.CreateResponse(HttpStatusCode.OK, model);
+        }
+
+        [Route("getavatars")]
+        public HttpResponseMessage GetAvatars()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, new { Avatars = BlipRepo.Current.GetAvatars() });
         }
     }
 }

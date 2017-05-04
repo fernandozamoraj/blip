@@ -13,7 +13,7 @@
             height: 70pt;
         }
 
-        .handle {
+       .handle {
             color: cornflowerblue;
             font-weight: normal;
         }
@@ -93,7 +93,12 @@
             userId: ko.observable(),
             displayName: ko.observable(),
             imagePath: ko.observable()
-        }
+
+        },
+        loggedIn: ko.observable(false),
+        avatars: ko.observableArray(),
+        selectedAvatar: ko.observable()
+       
     };
 
     function addMessage() {
@@ -123,21 +128,76 @@
                     model.Feed.push(data.Feed[i]);
                 }
 
-                model.editor.avatar(data.User.Avatar);
-                model.editor.userName(data.User.UserName);
-                model.editor.userId(data.User.UserId);
-                model.editor.displayName(data.User.DisplayName);
+                //model.editor.avatar(data.User.Avatar);
+                //model.editor.userName(data.User.UserName);
+                //model.editor.userId(data.User.UserId);
+                //model.editor.displayName(data.User.DisplayName);
                 model.editor.comment("");
-                model.editor.imagePath("/Content/Images/" + data.User.Avatar);
+               // model.editor.imagePath("/Content/Images/" + data.User.Avatar);
 
                 feedCount = model.Feed.length;
             }
         });
     }
 
+    function getAvatars() {
+        $.ajax("/blipapi/getavatars", {
+            type: "GET",
+            success: function (data) {
+                model.avatars.removeAll();
+                for (var i = 0; i < data.Avatars.length; i++) {
+                    model.avatars.push({ name: data.Avatars[i] });
+                }
+
+                console.log(model.avatars());
+            }
+        });
+    }
+
+    function login() {
+        $.ajax("/blipapi/login", {
+            type: "POST",
+            success: function (data) {
+                
+                model.editor.avatar(data.Avatar);
+                model.editor.userName(data.UserName);
+                model.editor.userId(data.UserId);
+                model.editor.displayName(data.DisplayName);
+                model.editor.imagePath("/Content/Images/" + data.Avatar);
+
+                model.loggedIn(true);
+                loadFeeds();
+            },
+            data: {
+                Avatar: model.selectedAvatar(),
+                UserName: model.editor.userName(),
+            }
+        });
+    }
+
     $(document).ready(function () {
-        getAllFeeds();
+
+        console.log("Getting avatars....");
+        getAvatars();
+        console.log("Got avatars....");
+
         ko.applyBindings(model);
+
+
+        $('select[id=User_Avatar]').change(function () {
+
+            var val = $(this).val();
+
+            console.log(val);
+
+            $('#avatar_s').attr('src', '/Content/Images/' + val).css('display', val.length ? 'block' : 'none');
+        });
+
+    });
+
+    function loadFeeds() {
+        getAllFeeds();
+        
 
         setInterval(refreshPage, 2000);
         setInterval(checkForWinner, 2000);
@@ -146,7 +206,9 @@
             console.log("updates was clicked");
             getAllFeeds();
         });
-    });
+
+
+    }
 
     function checkForWinner() {
         $.ajax({
@@ -225,11 +287,68 @@
 
 @section Body{
 
+    <div class="login-container" data-bind="ifnot: loggedIn">
+        <div class="row">
+            <div class="col-md-4">
+                <img src="~/Content/Images/blip-banner.PNG" />
+            </div>
+        </div>
+
+        <div class="jumbotron">
 
 
-    <div class="feed container">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <img id="avatar_s" src="~/Content/Images/av1.PNG" class="avatar" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <p>
+                            Enter a user name <br />Select and Avatar <br /> and click submit
+                        </p>
+
+                        <div class="form-group">
+
+                            <label for="user-name" class="control-label">User Name:</label>
+                            <input type="text" name="user-name" data-bind="value: model.editor.userName" class="form-control"/>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="User.Avatar">Avatar List: </label>
+                            <select class="form-control" id="User_Avatar" name="User.Avatar" 
+                                    data-bind="options: avatars,
+                                    optionsText: 'name',
+                                    optionsValue: 'name',
+                                    value: selectedAvatar,
+                                    optionsCaption: 'Choose...'">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <input type="submit" value="submit" class="btn btn-default form-control" data-bind="click: login" />
+                        </div>
+                    </div>
+                </div>
+
+        </div>
+
+    </div><!--login container-->
 
 
+    <div class="feed container" data-bind="if: loggedIn">
 
         <div id="new-bleeps" class="btn-sm">
             <div class="col-sm-6" id="updates-div">
