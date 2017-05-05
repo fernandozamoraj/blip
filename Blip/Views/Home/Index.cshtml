@@ -139,13 +139,13 @@
         $.ajax("/blipapi/upvote", {
             type: "POST",
             success: function (data) {
-                feed.LikesCount = data.LikesCount;
+                feed.LikesCountObs(data.LikesCount);
 
                 //TODO: update feed properly....
             },
             data: {
                 UserId: model.editor.userId(),
-                FeedId: feed.FeedId
+                FeedId: feed.FeedIdObs()
             }
         });
     }
@@ -156,6 +156,8 @@
             success: function (data) {
                 model.editor.comment("");
                 data.imagePath = ko.observable("/Content/Images/" + data.Avatar);
+                data.FeedIdObs = ko.observable(data.FeedId);
+                data.LikesCountObs = ko.observable(data.LikesCount);
                 model.Feed.unshift(data);
                 feedCount += 1;
             },
@@ -174,6 +176,8 @@
                 model.Feed.removeAll();
                 for (var i = 0; i < data.Feed.length; i++) {
                     data.Feed[i].imagePath = ko.observable("/Content/Images/" + data.Feed[i].Avatar);
+                    data.Feed[i].FeedIdObs = ko.observable(data.Feed[i].FeedId);
+                    data.Feed[i].LikesCountObs = ko.observable(data.Feed[i].LikesCount);
                     model.Feed.push(data.Feed[i]);
                 }
 
@@ -452,7 +456,7 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-1 likes-div" data-bind="click: $parent.likeClicked"><img class="likes-img" src="~/Content/Images/fire-small.PNG" /></div>
-                        <div class="col-sm-2"><p data-bind="text: LikesCount"></p></div>
+                        <div class="col-sm-2"><p data-bind="text: LikesCountObs"></p></div>
                     </div>
                 </div>
             </div>
