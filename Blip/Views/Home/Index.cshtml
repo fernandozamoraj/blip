@@ -9,8 +9,8 @@
 
     <style type="text/css">
         img.avatar {
-            width: 50pt;
-            height: 70pt;
+            width: 30pt;
+            height: 42pt;
         }
 
         .handle {
@@ -23,9 +23,9 @@
         }
         /* Some custom styles to beautify this example */
         .main-content {
-            min-height: 70px;
-            margin-bottom: 10px;
-            margin-top: 10px;
+            min-height: 50px;
+            margin-bottom: 5px;
+            margin-top: 5px;
         }
 
         .sidebar-content {
@@ -39,11 +39,11 @@
         }
 
         .sidebar-content-o {
-            min-height: 150px;
-            margin-bottom: 30px;
+            min-height: 75px;
+            margin-bottom: 10px;
             background: #b4bac0;
         }
-
+        
         .feed-item {
             margin: 10px;
             border: solid;
@@ -339,7 +339,7 @@
 
 @section Body{
 
-    <div class="login-container" data-bind="ifnot: loggedIn">
+    <div class="login-container container" data-bind="ifnot: loggedIn">
     
         <div class="row">
             <div class="col-md-4">
@@ -399,9 +399,7 @@
         </div>
 
     </div><!--login container-->
-
-
-
+    
     <div class="feed container" data-bind="if: loggedIn">
 
         <div id="new-bleeps" class="btn-sm">
@@ -410,11 +408,10 @@
             </div>
         </div>
 
-
         <div id="winner"></div>
 
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-sm-1">
                 <img class="avatar" data-bind="attr:{src: model.editor.imagePath}" />
                 <p class="handle" data-bind="text: model.editor.displayName"></p>
             </div>
@@ -441,24 +438,14 @@
                     </div>
                 </div>
 
-                <div class="col-sm-3 col-sm-offset-1">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="sidebar-content handle" data-bind="text: UserName">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="sidebar-content" data-bind="text: Comment">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-1 likes-div" data-bind="click: $parent.likeClicked"><img class="likes-img" src="~/Content/Images/fire-small.PNG" /></div>
-                        <div class="col-sm-2"><p data-bind="text: LikesCountObs"></p></div>
-                    </div>
-                </div>
+                <div class="col-sm-6">
+                       <p class="handle" data-bind="text: UserName"></p>
+                       <p class="" data-bind="text: Comment"></p>
+                       <div class="likes-div" data-bind="click: $parent.likeClicked">
+                            <img class="likes-img" src="~/Content/Images/fire-small.PNG" />
+                            <span data-bind="text: LikesCountObs"></span>
+                       </div>
+                </p>
             </div>
 
         </div>
