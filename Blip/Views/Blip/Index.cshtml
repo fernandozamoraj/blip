@@ -6,14 +6,14 @@
 }
 
 @section Styles{
- 
+
     <style type="text/css">
         img.avatar {
             width: 50pt;
             height: 70pt;
         }
 
-       .handle {
+        .handle {
             color: cornflowerblue;
             font-weight: normal;
         }
@@ -74,13 +74,13 @@
         }
     </style>
 
-   
+
 }
 
 
 @section Scripts{
- 
-<script>
+
+    <script>
 
     var feedCount = 0;
 
@@ -98,7 +98,7 @@
         loggedIn: ko.observable(false),
         avatars: ko.observableArray(),
         selectedAvatar: ko.observable()
-       
+
     };
 
     function addMessage() {
@@ -107,8 +107,8 @@
             success: function (data) {
                 model.editor.comment("");
                 data.imagePath = ko.observable("/Content/Images/" + data.Avatar);
-                //TODO what todo
                 model.Feed.unshift(data);
+                feedCount += 1;
             },
             data: {
                 Avatar: model.editor.avatar(),
@@ -128,13 +128,7 @@
                     model.Feed.push(data.Feed[i]);
                 }
 
-                //model.editor.avatar(data.User.Avatar);
-                //model.editor.userName(data.User.UserName);
-                //model.editor.userId(data.User.UserId);
-                //model.editor.displayName(data.User.DisplayName);
                 model.editor.comment("");
-               // model.editor.imagePath("/Content/Images/" + data.User.Avatar);
-
                 feedCount = model.Feed.length;
             }
         });
@@ -158,7 +152,7 @@
         $.ajax("/blipapi/login", {
             type: "POST",
             success: function (data) {
-                
+
                 model.editor.avatar(data.Avatar);
                 model.editor.userName(data.UserName);
                 model.editor.userId(data.UserId);
@@ -197,7 +191,7 @@
 
     function loadFeeds() {
         getAllFeeds();
-        
+
 
         setInterval(refreshPage, 2000);
         setInterval(checkForWinner, 2000);
@@ -206,8 +200,6 @@
             console.log("updates was clicked");
             getAllFeeds();
         });
-
-
     }
 
     function checkForWinner() {
@@ -217,8 +209,6 @@
             dataType: 'json',
             success: function (data) {
 
-
-                //$('#errordiv').html("success " + data.FeedCount);
                 if (data.Winner != null) {
                     $('#winner').show();
 
@@ -251,7 +241,6 @@
 
                 console.log("data.FeedCount is " + data.FeedCount);
                 console.log("feedCount is " + feedCount);
-                //$('#errordiv').html("success " + data.FeedCount);
 
                 if(feedCount==data.FeedCount ){
 
@@ -272,7 +261,7 @@
 
                     }
                 }
-                
+
             },
             error: function (x, y, z) {
                 //alert('x:' + x + ' y: ' + y + ' z:' + z);
@@ -282,7 +271,7 @@
     }
 
 
-</script>   
+    </script>
 }
 
 @section Body{
@@ -297,51 +286,49 @@
         <div class="jumbotron">
 
 
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <img id="avatar_s" src="~/Content/Images/av1.PNG" class="avatar" />
-                        </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <img id="avatar_s" src="~/Content/Images/av1.PNG" class="avatar" />
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-5">
-                        <p>
-                            Enter a user name <br />Select an Avatar <br /> and click submit
-                        </p>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <p>
+                        Enter a user name <br />Select an Avatar <br /> and click submit
+                    </p>
 
-                        <div class="form-group">
+                    <div class="form-group">
 
-                            <label for="user-name" class="control-label">User Name:</label>
-                            <input type="text" name="user-name" data-bind="value: model.editor.userName" class="form-control"/>
-
-                        </div>
+                        <label for="user-name" class="control-label">User Name:</label>
+                        <input type="text" name="user-name" data-bind="value: model.editor.userName" class="form-control" />
 
                     </div>
+
                 </div>
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="User.Avatar">Avatar List: </label>
-                            <select class="form-control" id="User_Avatar" name="User.Avatar" 
-                                    data-bind="options: avatars,
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="User.Avatar">Avatar List: </label>
+                        <select class="form-control" id="User_Avatar" name="User.Avatar"
+                                data-bind="options: avatars,
                                     optionsText: 'name',
                                     optionsValue: 'name',
                                     value: selectedAvatar,
-                                    optionsCaption: 'Choose...'">
-
-                            </select>
-                        </div>
+                                    optionsCaption: 'Choose...'"></select>
                     </div>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <input type="submit" value="submit" class="btn btn-default form-control" data-bind="click: login" />
-                        </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <input type="submit" value="submit" class="btn btn-default form-control" data-bind="click: login" />
                     </div>
                 </div>
+            </div>
 
         </div>
 
@@ -352,7 +339,7 @@
 
         <div id="new-bleeps" class="btn-sm">
             <div class="col-sm-6" id="updates-div">
-                <a class=""  id="updates"></a>
+                <a class="" id="updates"></a>
             </div>
         </div>
 
@@ -361,7 +348,7 @@
 
         <div class="row">
             <div class="col-lg-2">
-                <img class="avatar" data-bind="attr:{src: model.editor.imagePath}" /> 
+                <img class="avatar" data-bind="attr:{src: model.editor.imagePath}" />
                 <p class="handle" data-bind="text: model.editor.displayName"></p>
             </div>
         </div>
@@ -383,7 +370,7 @@
 
                 <div class="col-sm-1">
                     <div class="main-content">
-                        <img data-bind="attr:{src: imagePath}"  class="avatar" /> 
+                        <img data-bind="attr:{src: imagePath}" class="avatar" />
                     </div>
                 </div>
 
@@ -404,5 +391,5 @@
             </div>
         </div>
 
-    </div>    
+    </div>
 }

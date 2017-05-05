@@ -1,15 +1,80 @@
-﻿@model Blip.Models.BlipUserCreateViewModel
+﻿@using Blip.Models
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Feed";
 }
 
 @section Styles{
-    <style>
+
+    <style type="text/css">
         img.avatar {
-            width: 55pt;
+            width: 50pt;
             height: 70pt;
+        }
+
+        .handle {
+            color: cornflowerblue;
+            font-weight: normal;
+        }
+
+        #updates {
+            color: red;
+        }
+        /* Some custom styles to beautify this example */
+        .main-content {
+            min-height: 70px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .sidebar-content {
+            margin-bottom: 10px;
+            max-width: 150px;
+        }
+
+        .main-content-o {
+            min-height: 330px;
+            background: #dbdfe5;
+        }
+
+        .sidebar-content-o {
+            min-height: 150px;
+            margin-bottom: 30px;
+            background: #b4bac0;
+        }
+
+        .feed-item {
+            margin: 10px;
+            border: solid;
+            border-width: 1px;
+            border-color: gainsboro;
+        }
+
+        #refresh-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        #new-bleeps {
+            background-image: url(/Content/Images/refresh-small.PNG);
+            background-repeat: no-repeat;
+            background-position: center;
+            width: 40px;
+            height: 40px;
+            font-size: large;
+            font-weight: bold;
+            display: none;
+            cursor: pointer;
+        }
+
+        #winner {
+            font-size: xx-large;
+            color: red;
+        }
+
+        #errordiv{
+            color: red;
         }
     </style>
 }
@@ -18,31 +83,237 @@
 
     <script>
 
-        $(document).ready(function () {
-            $('select[id=User_Avatar]').change(function () {
+        var feedCount = 0;
 
-                var val = $(this).val();
 
-                console.log(val);
+    $(document).ready(function () {
 
-                $('#avatar_s').attr('src', '/Content/Images/' + val).css('display', val.length ? 'block' : 'none');
+        getAvatars();
+        ko.applyBindings(model);
+
+        $('select[id=User_Avatar]').change(function () {
+
+            var val = $(this).val();
+
+            console.log(val);
+
+            $('#avatar_s').attr('src', '/Content/Images/' + val).css('display', val.length ? 'block' : 'none');
+        });
+
+    });
+
+    var model = {
+        Feed: ko.observableArray(),
+        editor: {
+            comment: ko.observable(""),
+            avatar: ko.observable(""),
+            userName: ko.observable(""),
+            userId: ko.observable(),
+            displayName: ko.observable(),
+            imagePath: ko.observable()
+
+        },
+        loggedIn: ko.observable(false), //to determine if user has logged in already
+        avatars: ko.observableArray(),
+        selectedAvatar: ko.observable()
+
+    };
+
+    function addMessage() {
+        $.ajax("/blipapi/addfeed", {
+            type: "POST",
+            success: function (data) {
+                model.editor.comment("");
+                data.imagePath = ko.observable("/Content/Images/" + data.Avatar);
+                model.Feed.unshift(data);
+                feedCount += 1;
+            },
+            data: {
+                Avatar: model.editor.avatar(),
+                UserName: model.editor.userName(),
+                Comment: model.editor.comment()
+            }
+        });
+    }
+
+    function getAllFeeds() {
+        $.ajax("/blipapi/getall", {
+            type: "GET",
+            success: function (data) {
+                model.Feed.removeAll();
+                for (var i = 0; i < data.Feed.length; i++) {
+                    data.Feed[i].imagePath = ko.observable("/Content/Images/" + data.Feed[i].Avatar);
+                    model.Feed.push(data.Feed[i]);
+                }
+
+                model.editor.comment("");
+                feedCount = model.Feed.length;
+            }
+        });
+    }
+
+    function getAvatars() {
+        $.ajax("/blipapi/getavatars", {
+            type: "GET",
+            success: function (data) {
+                model.avatars.removeAll();
+                for (var i = 0; i < data.Avatars.length; i++) {
+                    model.avatars.push({ name: data.Avatars[i] });
+                }
+
+                model.selectedAvatar("av0.PNG")
+
+                console.log(model.avatars());
+            }
+        });
+    }
+
+    function loginDataIsValid() {
+        if(model.editor.userName() == ""){
+            $('#errordiv').show();
+            $('#errordiv').html("You must enter a user name!");
+            return false;
+        }
+        else if (typeof model.selectedAvatar() == 'undefined') {
+            $('#errordiv').show();
+            $('#errordiv').html("You must select an avatar!");
+            return false;
+        }
+
+        return true;
+    }
+
+    function login() {
+        
+        if(loginDataIsValid()) {
+            $.ajax("/blipapi/login", {
+                type: "POST",
+                success: function (data) {
+
+                    model.editor.avatar(data.Avatar);
+                    model.editor.userName(data.UserName);
+                    model.editor.userId(data.UserId);
+                    model.editor.displayName(data.DisplayName);
+                    model.editor.imagePath("/Content/Images/" + data.Avatar);
+
+                    model.loggedIn(true);
+                    loadFeeds();
+                },
+                data: {
+                    Avatar: model.selectedAvatar(),
+                    UserName: model.editor.userName(),
+                }
             });
-        });        
+            $('#errordiv').hide();
+            $('#errordiv').html("");
+        }
+    }
+
+    function loadFeeds() {
+        getAllFeeds();
+
+        setInterval(refreshPage, 1000);
+        setInterval(checkForWinner, 1000);
+
+        $("#new-bleeps").click(function () {
+            console.log("updates was clicked");
+            getAllFeeds();
+        });
+    }
+
+    function checkForWinner() {
+        $.ajax({
+            url: "/blipapi/getwinner",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                if (data.Winner != null) {
+                    $('#winner').show();
+
+                    //first time it's going to be zero
+                    if (data.Winner.UserId == model.editor.userId()) {
+                        $('#winner').html('Congratulations ' + data.Winner.DisplayName + '! You Won!!!');
+                    }
+                    else {
+                        $('#winner').html('Sorry! ' + data.Winner.DisplayName + ' is the winner. Better luck next time!');
+                    }
+                }
+                else {
+                    $('#winner').hide();
+                }
+
+            },
+            error: function (x, y, z) {
+                //alert('x:' + x + ' y: ' + y + ' z:' + z);
+                $('#errordiv').html("error occurred" + x + " " + y + " " + z);
+            }
+        });
+    }
+
+    function refreshPage() {
+        $.ajax({
+            url: "/blipapi/feedcount",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                if (feedCount == data.FeedCount) {
+
+                    $('#updates').html('');
+                    $('#new-bleeps').hide();
+                }
+
+                if (data.FeedCount > feedCount) {
+
+                    //first time it's going to be zero
+                    if (feedCount === 0) {
+                        feedCount = data.FeedCount;
+                        $('#new-bleeps').hide();
+                    }
+                    else {
+                        $('#updates').html('' + (data.FeedCount - feedCount) + "...");
+                        $('#new-bleeps').show();
+
+                    }
+                }
+            },
+            error: function (x, y, z) {
+                //alert('x:' + x + ' y: ' + y + ' z:' + z);
+                $('#errordiv').html("error occurred" + x + " " + y + " " + z);
+            }
+        });
+    }
+
+    window.onbeforeunload = function (e) {
+        e = e || window.event;
+
+        // For IE and Firefox prior to version 4
+        if (e) {
+            e.returnValue = 'If you leave you will lose your user session. Are you sure?';
+        }
+
+        // For Safari
+        return 'If you leave you will lose your user session. Are you sure?';
+    };
 
     </script>
 }
 
 @section Body{
 
-    <div class="row">
-        <div class="col-md-4">
-            <img src="~/Content/Images/blip-banner.PNG" />
+    <div class="login-container" data-bind="ifnot: loggedIn">
+    
+        <div class="row">
+            <div class="col-md-4">
+                <img src="~/Content/Images/blip-banner.PNG" />
+            </div>
         </div>
-    </div>
 
-    <div class="jumbotron">
-        @using (Html.BeginForm("Create", "BlipUser"))
-        {
+        <div id="errordiv">...</div>
+
+        <div class="jumbotron">
+
 
             <div class="row">
                 <div class="col-md-5">
@@ -54,12 +325,14 @@
             <div class="row">
                 <div class="col-md-5">
                     <p>
-                        Enter a user name <br />Select and Avatar <br /> and click submit
+                        Enter a user name <br />Select an Avatar <br /> and click submit
                     </p>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.User.UserName, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.User.UserName, new { htmlAttributes = new { @class = "form-control" } })
+
+                        <label for="user-name" class="control-label">User Name:</label>
+                        <input type="text" name="user-name" data-bind="value: model.editor.userName" class="form-control" />
+
                     </div>
 
                 </div>
@@ -67,13 +340,13 @@
             <div class="row">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <label for="SelectedAvatar">Avatar List: </label>
-                        <select class="form-control" id="User_Avatar" name="User.Avatar">
-                            @foreach (var item in Model.Avatars)
-                            {
-                                <option value="@item">@item</option>
-                            }
-                        </select>
+                        <label for="User.Avatar">Avatar List: </label>
+                        <select class="form-control" id="User_Avatar" name="User.Avatar"
+                                data-bind="options: avatars,
+                                    optionsText: 'name',
+                                    optionsValue: 'name',
+                                    value: selectedAvatar,
+                                    optionsCaption: 'Choose...'"></select>
                     </div>
                 </div>
             </div>
@@ -81,15 +354,72 @@
             <div class="row">
                 <div class="col-md-5">
                     <div class="form-group">
-                        <input type="submit" value="submit" class="btn btn-default form-control" />
+                        <input type="submit" value="submit" class="btn btn-default form-control" data-bind="click: login" />
                     </div>
                 </div>
             </div>
 
+        </div>
 
-        }
+    </div><!--login container-->
+
+
+
+    <div class="feed container" data-bind="if: loggedIn">
+
+        <div id="new-bleeps" class="btn-sm">
+            <div class="col-sm-6" id="updates-div">
+                <a class="" id="updates"></a>
+            </div>
+        </div>
+
+
+        <div id="winner"></div>
+
+        <div class="row">
+            <div class="col-lg-2">
+                <img class="avatar" data-bind="attr:{src: model.editor.imagePath}" />
+                <p class="handle" data-bind="text: model.editor.displayName"></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <textarea cols="40" rows="4" data-bind="value: model.editor.comment"></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="submit" value="Submit" class="btn btn-default form-control" data-bind="click: addMessage" />
+            </div>
+        </div>
+
+        <div data-bind="foreach: model.Feed">
+            <div class="row feed-item">
+
+                <div class="col-sm-1">
+                    <div class="main-content">
+                        <img data-bind="attr:{src: imagePath}" class="avatar" />
+                    </div>
+                </div>
+
+                <div class="col-sm-3 col-sm-offset-1">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="sidebar-content handle" data-bind="text: UserName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="sidebar-content" data-bind="text: Comment">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
-
 }
-
-
