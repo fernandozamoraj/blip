@@ -65,7 +65,7 @@ namespace Blip.Models
 
         public void Add(UserFeed feed)
         {
-            feed.FeedId = feeds.Count;
+            feed.FeedId = feeds.Count+1;
             feeds.Add(feed);
         }
 

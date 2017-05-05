@@ -173,4 +173,3 @@ C:\dev\blipgit\blip\Blip\bin\Microsoft.Owin.Security.Twitter.xml
 C:\dev\blipgit\blip\Blip\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\dev\blipgit\blip\Blip\obj\Debug\Blip.dll
 C:\dev\blipgit\blip\Blip\obj\Debug\Blip.pdb
-C:\dev\blipgit\blip\Blip\obj\Debug\Blip.csprojResolveAssemblyReference.cache

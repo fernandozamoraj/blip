@@ -17,7 +17,7 @@ namespace Blip.Controllers
         [HttpPost]
         public HttpResponseMessage Upvote(LikeEntry likeEntry)
         {
-            int likesCount = FeedRepo.Current.VoteUp(likeEntry.UserFeedId, likeEntry.UserId);
+            int likesCount = FeedRepo.Current.VoteUp(likeEntry.FeedId, likeEntry.UserId);
             
             return Request.CreateResponse(HttpStatusCode.OK, new { LikesCount = likesCount });
         }

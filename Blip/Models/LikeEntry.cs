@@ -7,7 +7,7 @@ namespace Blip.Models
 {
     public class LikeEntry
     {
-        public int UserFeedId { get; set; }
+        public int FeedId { get; set; }
         public int UserId { get; set; }
     }
 }
