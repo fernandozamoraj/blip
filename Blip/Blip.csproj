@@ -231,6 +231,11 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Images\av1.PNG" />
+    <Content Include="Content\Images\av11.PNG" />
+    <Content Include="Content\Images\av12.PNG" />
+    <Content Include="Content\Images\av13.PNG" />
+    <Content Include="Content\Images\av14.PNG" />
+    <Content Include="Content\Images\av15.PNG" />
     <Content Include="Content\Images\av2.PNG" />
     <Content Include="Content\Images\av3.PNG" />
     <Content Include="Content\Images\av4.PNG" />
@@ -243,6 +248,7 @@
     <Content Include="Content\Images\av0.PNG" />
     <Content Include="Content\Images\blip-banner.PNG" />
     <Content Include="Content\Images\fire-small.PNG" />
+    <Content Include="Content\Images\refresh-small - Copy.PNG" />
     <Content Include="Content\Images\refresh-small.PNG" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
