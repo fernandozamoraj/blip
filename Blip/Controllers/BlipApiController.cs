@@ -15,14 +15,11 @@ namespace Blip.Controllers
 
         [Route("upvote")]
         [HttpPost]
-        public string Upvote([FromBody]string feedId)
+        public HttpResponseMessage Upvote(LikeEntry likeEntry)
         {
-            int iId = 0;
-
-            int.TryParse(feedId, out iId);
-            FeedRepo.Current.VoteUp(iId);
+            int likesCount = FeedRepo.Current.VoteUp(likeEntry.UserFeedId, likeEntry.UserId);
             
-            return "Success";
+            return Request.CreateResponse(HttpStatusCode.OK, new { LikesCount = likesCount });
         }
 
         [Route("feedcount")]

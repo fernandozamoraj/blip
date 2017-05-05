@@ -74,9 +74,10 @@ namespace Blip.Models
             return feeds;
         }
 
-        public void VoteUp(int feedId)
+        public int VoteUp(int feedId, int userId)
         {
-            feeds.First(x => x.FeedId == feedId).Fyah += 1;
+            return feeds.First(x => x.FeedId == feedId)
+                .AddLike(userId);
         }
     }
 }

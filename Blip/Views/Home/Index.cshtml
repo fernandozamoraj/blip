@@ -76,6 +76,11 @@
         #errordiv{
             color: red;
         }
+
+        #likes-img{
+            width: 25px;
+            height: 25px;
+        }
     </style>
 }
 
@@ -103,6 +108,7 @@
     });
 
     var model = {
+        
         Feed: ko.observableArray(),
         editor: {
             comment: ko.observable(""),
@@ -115,9 +121,25 @@
         },
         loggedIn: ko.observable(false), //to determine if user has logged in already
         avatars: ko.observableArray(),
-        selectedAvatar: ko.observable()
+        selectedAvatar: ko.observable(),
+        likeClicked: function (feed) {
+            handleClickedLike(feed);
+        }
 
     };
+
+    function handleClickedLike(feed) {
+        $.ajax("/blipapi/upvote", {
+            type: "POST",
+            success: function (data) {
+                feed.LikesCount = data.LikesCount;
+            },
+            data: {
+                UserId: model.editor.userId(),
+                FeedId: feed.FeedId
+            }
+        });
+    }
 
     function addMessage() {
         $.ajax("/blipapi/addfeed", {
@@ -297,6 +319,8 @@
         return 'If you leave you will lose your user session. Are you sure?';
     };
 
+      
+
     </script>
 }
 
@@ -417,8 +441,13 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-sm-1" data-bind="click: $parent.likeClicked"><img class="likes-img" src="~/Content/Images/fire-small.PNG" /></div>
+                        <div class="col-sm-2"><p data-bind="text: LikesCount"></p></div>
+                    </div>
                 </div>
             </div>
+
         </div>
 
     </div>

@@ -221,6 +221,7 @@
     <Compile Include="Models\FeedRepo.cs" />
     <Compile Include="Models\FeedViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\LikeEntry.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\UserFeed.cs" />
