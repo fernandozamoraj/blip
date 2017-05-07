@@ -7,6 +7,7 @@ using Blip.Models;
 
 namespace Blip.Controllers
 {
+    //TODO: clean this controller up....
     public class HomeController : Controller
     {
         public ActionResult Index()
