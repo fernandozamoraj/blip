@@ -20,9 +20,9 @@ namespace Blip.Models
         {
             UserFeed feed = new UserFeed
             {
-                UserName = "JSmith456",
+                UserName = "Neo123",
                 Avatar = "av0.PNG",
-                Comment = "I show up to school 10 minutes late... at the wrong school",
+                Comment = "Programmer: A machine that turns coffee into code.",
                 FeedId = 0
             };
 
@@ -31,9 +31,9 @@ namespace Blip.Models
 
             feed = new UserFeed
             {
-                UserName = "EJackson123",
+                UserName = "JsonData123",
                 Avatar = "av4.PNG",
-                Comment = "This is dummy data",
+                Comment = "Java is to JavaScript as Ham is to Hamburger.",
                 FeedId = 1
             };
 
@@ -43,9 +43,9 @@ namespace Blip.Models
 
             feed = new UserFeed
             {
-                UserName = "JOker12",
+                UserName = "ZigDaMn",
                 Avatar = "av7.PNG",
-                Comment = "More dummy Data",
+                Comment = "What is the object-oriented way to become wealthy? Inheritance.",
                 FeedId = 2
             };
 
