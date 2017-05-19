@@ -7,12 +7,12 @@ namespace Blip.Models
 {
     public class BlipRepo
     {
-        static List<BlipUser> _users = null;
-        static List<int> _winners = null;
-        static int _claims = 0;
+        List<BlipUser> _users = null;
+        List<int> _winners = null;
+        int _claims = 0;
 
         static BlipRepo _repo = null;
-        static List<String> _avatars = null;
+        List<String> _avatars = null;
 
         Random _r;
         private BlipRepo()

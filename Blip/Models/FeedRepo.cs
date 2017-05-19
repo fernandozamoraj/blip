@@ -18,40 +18,29 @@ namespace Blip.Models
 
         private void AddDefaultFeeds()
         {
-            UserFeed feed = new UserFeed
-            {
-                UserName = "Neo123",
-                Avatar = "av0.PNG",
-                Comment = "Programmer: A machine that turns coffee into code.",
-                FeedId = 0
+            feeds = new List<UserFeed>{
+                new UserFeed
+                {
+                    UserName = "Neo123",
+                    Avatar = "av0.PNG",
+                    Comment = "Programmer: A machine that turns coffee into code.",
+                    FeedId = 0
+                },
+                new UserFeed
+                {
+                    UserName = "JsonData123",
+                    Avatar = "av4.PNG",
+                    Comment = "Java is to JavaScript as Ham is to Hamburger.",
+                    FeedId = 1
+                },
+                new UserFeed
+                {
+                    UserName = "ZigDaMn",
+                    Avatar = "av7.PNG",
+                    Comment = "What is the object-oriented way to become wealthy? Inheritance.",
+                    FeedId = 2
+                }
             };
-
-            FeedRepo.feeds.Add(feed);
-
-
-            feed = new UserFeed
-            {
-                UserName = "JsonData123",
-                Avatar = "av4.PNG",
-                Comment = "Java is to JavaScript as Ham is to Hamburger.",
-                FeedId = 1
-            };
-
-            FeedRepo.feeds.Add(feed);
-
-
-
-            feed = new UserFeed
-            {
-                UserName = "ZigDaMn",
-                Avatar = "av7.PNG",
-                Comment = "What is the object-oriented way to become wealthy? Inheritance.",
-                FeedId = 2
-            };
-
-            FeedRepo.feeds.Add(feed);
-
-
         }
 
         public static FeedRepo Current{get{ return _repo; } }

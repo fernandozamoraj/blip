@@ -12,14 +12,7 @@ namespace Blip.Controllers
     {
         public ActionResult Index()
         {
-            BlipUserCreateViewModel model = new BlipUserCreateViewModel
-            {
-                Avatars = BlipRepo.Current.GetAvatars(),
-                SelectedAvatar = "",
-                User = new BlipUser()
-            };
-
-            return View(model);
+            return View();
         }
 
         public ActionResult About()
